@@ -1,6 +1,22 @@
 
 
 /* game board table */
+h1 {
+  display: inline-block;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5rem;
+  
+  color: yellow;
+}
+
+#titleGradient {
+  border-radius: 50%;
+  text-align: center;
+  width: 350px;
+  padding: 10px;
+  /* background-color: blue; */
+  background-image: linear-gradient(to bottom right, #2787f5, #c527f5, red, yellow);
+}
 
 #board td {
   width: 50px;
@@ -19,6 +35,13 @@
 }
 
 /* TODO: make pieces red/blue,  depending on player 1/2 piece */
+.p1 {
+  background-image: linear-gradient(to bottom right, #ff0329, yellow);
+}
+
+.p2 {
+  background-image: linear-gradient(to bottom right, #2787f5, #c527f5);
+}
 
 /* column-top is table row of clickable areas for each column */
 
@@ -29,3 +52,6 @@
 #column-top td:hover {
   background-color: gold;
 }
+
+
+

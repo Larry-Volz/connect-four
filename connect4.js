@@ -1,28 +1,8 @@
 /*
-PROCEDURAL FLOW
-- set up global letiables 
-  - boolean to monitor whose turn it is
-  - set up empty board array makeBoard()
-  - write board array to start updateScreen()
-  - status letiable (in-play, blue won, red one
-  - 
-  GAME LOOP
-
-- addEventListener
-  - check for click
-    - update game array
-    - write/re-write board on screen
-    - check gamae status
-      - check for win - note it if so
-      - check for full board/stalemate - note it if so
-    - re-draw board/re-start   
-      - if win or draw
-        - Announce win or draw
-        - offer chance to restart (Refresh game)       
-METHODS
-- makeBoard()
-- updateScreen()
-
+TO DO
+- fix winning subroutine
+- make table responsive for smaller devices
+- create animation subroutine
 */
 
 /** Connect Four
@@ -113,7 +93,7 @@ function placeInTable(y, x) {
   let div = document.createElement("div");
   div.classList.add("piece");
   div.classList.add(`p${currPlayer}`);
-  div.style.backgroundColor = COLOR[currPlayer-1];
+  // div.style.backgroundColor = COLOR[currPlayer-1];
   let cell = document.getElementById(`${y}-${x}`);
   cell.append(div);
   board[y][x] = currPlayer;
