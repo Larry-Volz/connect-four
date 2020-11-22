@@ -11,7 +11,7 @@ TO DO
  * column until a player gets four-in-a-row (horiz, vert, or diag) or until
  * board fills (tie)
  */
-const COLOR = ["red", "blue"];
+const COLOR = ["","red", "blue"];
 
 const WIDTH = 7;
 const HEIGHT = 6;
@@ -47,12 +47,12 @@ function makeBoard() {
 /** makeHtmlBoard: make HTML table and row of column tops. */
 
 function makeHtmlBoard() {
-  // TODO: get "htmlBoard" letiable from the item in HTML w/ID of "board"
   htmlBoard = document.querySelector("#board");
 
   // TODO: Create top row & listener
   let top = document.createElement("tr");
   top.setAttribute("id", "column-top");
+
   top.addEventListener("click", handleClick);
 
   for (let x = 0; x < WIDTH; x++) {
@@ -62,7 +62,7 @@ function makeHtmlBoard() {
   }
   htmlBoard.append(top);
 
-  // TODO: Create grid
+  // Creates grid
   for (let y = 0; y < HEIGHT; y++) {
     const row = document.createElement("tr");
     for (let x = 0; x < WIDTH; x++) {
@@ -79,7 +79,7 @@ function makeHtmlBoard() {
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 
 function findSpotForCol(x) {
-  // TODO: write the real version of this, rather than always returning 0
+  // finds the empty vertical slot for a given x value
   for (let y = HEIGHT-1; y >=0; y--){
     if (!board[y][x]) return y;
   }
@@ -89,26 +89,26 @@ function findSpotForCol(x) {
 /** placeInTable: update DOM to place piece into HTML table of board */
 
 function placeInTable(y, x) {
-  // TODO: make a div and insert into correct table cell
+  // Makes a div and inserts into correct table cell
   let div = document.createElement("div");
   div.classList.add("piece");
   div.classList.add(`p${currPlayer}`);
   // div.style.backgroundColor = COLOR[currPlayer-1];
   let cell = document.getElementById(`${y}-${x}`);
   cell.append(div);
-  board[y][x] = currPlayer;
-  if (currPlayer === 1) { currPlayer = 2} else { currPlayer = 1};
+ 
+  
 }
 
 /** endGame: announce game end */
 
 function endGame(msg) {
-  // TODO: pop up alert message
+  // Pops up winning alert message
   alert(`${COLOR[currPlayer]} Wins!`);
 }
 
 /** handleClick: handle click of column top to play piece */
-
+// MAIN GAME LOOP
 function handleClick(evt) {
   // get x from ID of clicked cell
   let x = +evt.target.id;
@@ -120,11 +120,14 @@ function handleClick(evt) {
   }
 
   // place piece in board and add to HTML table
-  // TODO: add line to update in-memory board
   placeInTable(y, x);
 
+  // TODO: add line to update in-memory board
+  board[y][x] = currPlayer;
+
   // check for win
-  if (checkForWin()) {
+  let isWon = checkForWin();
+  if (isWon) {
     return endGame(`Player ${currPlayer} won!`);
   }
 
@@ -132,9 +135,9 @@ function handleClick(evt) {
   // TODO: check if all cells in board are filled; if so call, call endGame
 
 
-
   // switch players
-  // TODO: switch currPlayer 1 <-> 2
+  // currPlayer 1 <-> 2
+  if (currPlayer === 1) { currPlayer = 2} else { currPlayer = 1};
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -142,29 +145,36 @@ function handleClick(evt) {
 function checkForWin() {
   function _win(cells) {
     // Check four cells to see if they're all color of current player
-    //  - cells: list of four (y, x) cells
-    //  - returns true if all are legal coordinates & all match currPlayer
+    // cells: list of four (y, x) cells
 
+    //  returns true IF ALL are legal coordinates...
     return cells.every(
       ([y, x]) =>
         y >= 0 &&
         y < HEIGHT &&
         x >= 0 &&
         x < WIDTH &&
+        // AND all match currPlayer (all the same color)
         board[y][x] === currPlayer
     );
   }
 
-  // TODO: read and understand this code. Add comments to help you.
-
+  //Create all the sequences of 4 on the board and make into arrays of coordinates
   for (let y = 0; y < HEIGHT; y++) {
     for (let x = 0; x < WIDTH; x++) {
+      //for each column (x) check and see if there are 4 in a row horizontally
+      //make each check into a 2d array
       let horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
+      //then vertically
       let vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
+      //then for each diagonal direction
       let diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
       let diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
+
+      //then send through _win to see if any of those are legal sequences of four
       if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+        //return true if a win
         return true;
       }
     }
