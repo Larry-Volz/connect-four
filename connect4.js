@@ -33,21 +33,8 @@ let winningFour = [[]];
  *    board = array of rows, each row is array of cells  (board[y][x])
  */
 
-// function makeBoard() {
-//   // TODO: set "board" to empty HEIGHT x WIDTH matrix array
-//   for (let h = 0; h < HEIGHT; h++){
-//     let temp = [];
-//     for (let w = 0; w < WIDTH; w++) {
-//       // console.log(`h:${h}, w:${w}`);
-//       temp.push(0); //fill with 0's - chose over nulls so I can use switch statement later
-      
-//     }
-//     board.push(temp);
-//   }
-//   console.log(board);
-// }
 
-function makeBoard() {
+makeBoard = ()=> {
   for (let y = 0; y < HEIGHT; y++) {
     board.push(Array.from({ length: WIDTH }));
   }
@@ -56,7 +43,7 @@ function makeBoard() {
 
 /** makeHtmlBoard: make HTML table and row of column tops. */
 
-function makeHtmlBoard() {
+makeHtmlBoard = () => {
   htmlBoard = document.querySelector("#board");
 
   // TODO: Create top row & listener
@@ -88,7 +75,7 @@ function makeHtmlBoard() {
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 
-function findSpotForCol(x) {
+findSpotForCol = (x) => {
   // finds the empty vertical slot for a given x value
   for (let y = HEIGHT-1; y >=0; y--){
     if (!board[y][x]) return y;
@@ -98,7 +85,7 @@ function findSpotForCol(x) {
 
 /** placeInTable: update DOM to place piece into HTML table of board */
 
-function placeInTable(y, x) {
+placeInTable = (y, x) => {
   // Makes a div and inserts into correct table cell
   let div = document.createElement("div");
   div.classList.add("piece");
@@ -119,7 +106,7 @@ let getDiagDL = (y,x) => [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]
 
 /** endGame: announce game end */
 
-function endGame(msg) {
+endGame = (msg) => {
 
   //visually highlights the disks that are 4 in a row 
   for (let disk = 0; disk < 4; disk++) {
@@ -145,7 +132,7 @@ function endGame(msg) {
 /* ---------------------------------- MAIN GAME LOOP from EventListener -----------------------------------------*/
 
 /** handleClick: handle click of column top to play piece */
-function handleClick(evt) {
+handleClick = (evt) => {
   // get x from ID of clicked cell
   let x = +evt.target.id;
 
@@ -178,8 +165,8 @@ function handleClick(evt) {
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
 
-function checkForWin() {
-  function _win(cells) {
+checkForWin = () => {
+  _win = (cells) => {
     // Check four cells to see if they're all color of current player
     // cells: list of four (y, x) cells
 
@@ -214,16 +201,12 @@ function checkForWin() {
       if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
         if (_win(horiz)) {
           winningFour = getHoriz(y,x);
-          console.log('horizontal win');
         } else if (_win(vert)){
           winningFour = getVert(y,x);
-          console.log('vertical win');
         } else if (_win(diagDR)){
           winningFour = getDiagDR(y,x)
-          console.log('diagRT win');
         } else {
           winningFour = getDiagDL(y,x);
-          console.log('diagLt win');
         }
         //return true if a win
         return true;
