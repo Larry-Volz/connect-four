@@ -1,6 +1,6 @@
 body {
   text-align: center;
-  
+  background-color: #90BAD4;
 }
 
 
@@ -19,7 +19,6 @@ h1 {
   width: 320px;
   margin: auto;
   padding: 10px;
-  /* background-color: blue; */
   background-image: linear-gradient(to bottom right, #2787f5, #c527f5, red, yellow);
 }
 
@@ -28,11 +27,13 @@ h1 {
 table {
   size: 320px;
   margin: auto;
+  background-color: white;
 }
 #board td {
   width: 45px;
   height: 45px;
   border: solid 1px #666;
+  
 }
 
 /* pieces are div within game table cells: draw as colored circles */
@@ -48,12 +49,11 @@ table {
 /* TODO: make pieces red/blue,  depending on player 1/2 piece */
 .p1 {
   background-image: linear-gradient(to bottom right, #ff0329, yellow);
+  
 }
 
 .p1Win {
   background-image: linear-gradient(to bottom right, yellow, #ff0329);
-  transition: all 1s;
-
 }
 
 .p2 {

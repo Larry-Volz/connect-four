@@ -2,11 +2,11 @@
 IMPROVEMENTS TO ORIGINAL
 - Used setTimeout for a few microseconds delay to fix winning subroutine to place piece FIRST so player can SEE 
 the four in a row before the win sequence
-- graphic to highlight the winning pieces
-  - refactored the code to check for 4 in a rown into functions so I could use them to visually highlight the win
-  - use set interval to increase/decrease size and transition in CSS to make it smooth
-  - Do Play again prompt with clearInterval/refresh to restart the game (on no go to my portfolio)
-  - use clearInterval 
+- Used a reversed gradient to highlight the winning pieces
+  - refactored the code to check for 4 in a row into functions so I could use them to acces the coordinates 
+  needed to visually highlight the win
+  - used set interval to increase/decrease size and transition in CSS to make it smooth
+  - Do Play again prompt refresh to restart the game (on no go to my portfolio)
 - make table responsive for smaller devices
 - create animation subroutine for dropping pieces
 */
@@ -17,6 +17,8 @@ the four in a row before the win sequence
  * column until a player gets four-in-a-row (horiz, vert, or diag) or until
  * board fills (tie)
  */
+
+const PORTFOLIO = "https://www.larry-volz.com/software-development-portfolio";
 const COLOR = ["","red", "blue"];
 
 const WIDTH = 7;
@@ -123,8 +125,8 @@ function endGame(msg) {
   for (let disk = 0; disk < 4; disk++) {
     let y1 = winningFour[disk][0];
     let x1 = winningFour[disk][1]
-    grow = document.getElementById(`${y1}-${x1}`);
-    grow.classList.add(`p${currPlayer}Win`);
+    highlight = document.getElementById(`${y1}-${x1}`);
+    highlight.classList.add(`p${currPlayer}Win`);
 
   }
   // Pops up winning alert message
@@ -132,7 +134,10 @@ function endGame(msg) {
   //to re-draw the piece which was VERY unsatisfying to the players
   
   setTimeout(() => {
-    alert(msg);
+    let playAgain = confirm(msg);
+    if(playAgain) {location.reload()}
+    else (window.location.replace(PORTFOLIO));
+    
   }, 2);
 }
 
@@ -159,7 +164,7 @@ function handleClick(evt) {
   // check for win
 
   if (checkForWin()) {
-    return endGame(`${COLOR[currPlayer]} Wins!`);
+    return endGame(`${COLOR[currPlayer].toUpperCase()} Wins!\nWant to play again?`);
   }
 
   // check for tie
