@@ -1,8 +1,14 @@
 /*
-TO DO
-- fix winning subroutine
+IMPROVEMENTS TO ORIGINAL
+- Used setTimeout for a few microseconds delay to fix winning subroutine to place piece FIRST so player can SEE 
+the four in a row before the win sequence
+- graphic to highlight the winning pieces
+  - refactored the code to check for 4 in a rown into functions so I could use them to visually highlight the win
+  - use set interval to increase/decrease size and transition in CSS to make it smooth
+  - Do Play again prompt with clearInterval/refresh to restart the game (on no go to my portfolio)
+  - use clearInterval 
 - make table responsive for smaller devices
-- create animation subroutine
+- create animation subroutine for dropping pieces
 */
 
 /** Connect Four
@@ -18,6 +24,8 @@ const HEIGHT = 6;
 
 let currPlayer = 1; // active player: 1 or 2
 let board = []; // array of rows, each row is array of cells  (board[y][x])
+
+let winningFour = [[]];
 
 /** makeBoard: create in-JS board structure:
  *    board = array of rows, each row is array of cells  (board[y][x])
@@ -96,19 +104,42 @@ function placeInTable(y, x) {
   // div.style.backgroundColor = COLOR[currPlayer-1];
   let cell = document.getElementById(`${y}-${x}`);
   cell.append(div);
- 
-  
+  console.log("in placeInTable");
+
 }
+
+//functions to check for 4 in a row
+let getHoriz = (y,x) => [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
+let getVert = (y,x) => [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
+let getDiagDR = (y,x) => [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
+let getDiagDL = (y,x) => [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
+
 
 /** endGame: announce game end */
 
 function endGame(msg) {
+
+  //visually highlights the disks that are 4 in a row 
+  for (let disk = 0; disk < 4; disk++) {
+    let y1 = winningFour[disk][0];
+    let x1 = winningFour[disk][1]
+    grow = document.getElementById(`${y1}-${x1}`);
+    grow.classList.add(`p${currPlayer}Win`);
+
+  }
   // Pops up winning alert message
-  alert(`${COLOR[currPlayer]} Wins!`);
+  //used setTimeout because the alert was popping up before the screen had the chance
+  //to re-draw the piece which was VERY unsatisfying to the players
+  
+  setTimeout(() => {
+    alert(msg);
+  }, 2);
 }
 
+
+/* ---------------------------------- MAIN GAME LOOP from EventListener -----------------------------------------*/
+
 /** handleClick: handle click of column top to play piece */
-// MAIN GAME LOOP
 function handleClick(evt) {
   // get x from ID of clicked cell
   let x = +evt.target.id;
@@ -126,9 +157,9 @@ function handleClick(evt) {
   board[y][x] = currPlayer;
 
   // check for win
-  let isWon = checkForWin();
-  if (isWon) {
-    return endGame(`Player ${currPlayer} won!`);
+
+  if (checkForWin()) {
+    return endGame(`${COLOR[currPlayer]} Wins!`);
   }
 
   // check for tie
@@ -164,16 +195,31 @@ function checkForWin() {
     for (let x = 0; x < WIDTH; x++) {
       //for each column (x) check and see if there are 4 in a row horizontally
       //make each check into a 2d array
-      let horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
+      let horiz = getHoriz(y,x);
       //then vertically
-      let vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
+      let vert = getVert(y,x);
+      
       //then for each diagonal direction
-      let diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
-      let diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
+      let diagDR = getDiagDR(y,x);
+      let diagDL = getDiagDL(y,x);
+      
 
 
       //then send through _win to see if any of those are legal sequences of four
       if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+        if (_win(horiz)) {
+          winningFour = getHoriz(y,x);
+          console.log('horizontal win');
+        } else if (_win(vert)){
+          winningFour = getVert(y,x);
+          console.log('vertical win');
+        } else if (_win(diagDR)){
+          winningFour = getDiagDR(y,x)
+          console.log('diagRT win');
+        } else {
+          winningFour = getDiagDL(y,x);
+          console.log('diagLt win');
+        }
         //return true if a win
         return true;
       }
